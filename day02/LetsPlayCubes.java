@@ -18,13 +18,16 @@ public class LetsPlayCubes {
 
     private void checkGameRounds() {
         int possibleGamesIndexSum = 0;
+        int waterPower = 0;
         for (String Round : challengeInput.split("\n")) {
             var splitedRound = Round.split(":");
             if(isRoundPossible(splitedRound[1])) {
                 possibleGamesIndexSum += Integer.parseInt(splitedRound[0].split(" ")[1]);
             }
+            waterPower += minimumPower(splitedRound[1]);
         }
         System.out.println("Possible games: " + possibleGamesIndexSum);
+        System.out.println("Water power needed: " + waterPower);
     }
 
     private boolean isRoundPossible(String Round) {
@@ -44,6 +47,27 @@ public class LetsPlayCubes {
         }
 
         return possible;
+    }
+
+    private int minimumPower(String Round) {
+        int minimumGreen = 0;
+        int minimumRed = 0;
+        int minimumBlue = 0;
+
+        for(String BagPull : Round.split((";"))) {
+            var splitedCubes = BagPull.split(",");
+            
+            for(String ColoredCube : splitedCubes) {
+                if(ColoredCube.contains("green") && Integer.parseInt(ColoredCube.stripLeading().split(" ")[0]) > minimumGreen)
+                    minimumGreen = Integer.parseInt(ColoredCube.stripLeading().split(" ")[0]);
+                if(ColoredCube.contains("red") && Integer.parseInt(ColoredCube.stripLeading().split(" ")[0]) > minimumRed)
+                    minimumRed = Integer.parseInt(ColoredCube.stripLeading().split(" ")[0]);
+                if(ColoredCube.contains("blue") && Integer.parseInt(ColoredCube.stripLeading().split(" ")[0]) > minimumBlue)
+                    minimumBlue = Integer.parseInt(ColoredCube.stripLeading().split(" ")[0]);
+            }
+        }
+
+        return minimumGreen * minimumRed * minimumBlue;
     }
 
     public static void main(String[] args) {
